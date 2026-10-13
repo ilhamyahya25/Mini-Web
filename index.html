@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Dashboard</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1120;
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 7%;
+      border-bottom: 1px solid #263248;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #60a5fa;
+    }
+
+    .clock {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 40px 24px;
+    }
+
+    .welcome {
+      margin-bottom: 30px;
+    }
+
+    .welcome h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .welcome p {
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #151f32;
+      border: 1px solid #263248;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .card p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 30px;
+      color: #60a5fa;
+    }
+
+    .task-section {
+      background: #151f32;
+      border: 1px solid #263248;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .task-section h2 {
+      margin-bottom: 20px;
+    }
+
+    .task-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 13px;
+      background: #0b1120;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: white;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #60a5fa;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid #263248;
+    }
+
+    li span {
+      flex: 1;
+      overflow-wrap: anywhere;
+    }
+
+    li.done span {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+
+    .check {
+      accent-color: #3b82f6;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    .delete {
+      background: #dc2626;
+      padding: 8px 12px;
+    }
+
+    .delete:hover {
+      background: #b91c1c;
+    }
+
+    .empty {
+      color: #64748b;
+      padding: 10px 0;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 30px 15px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        padding: 20px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      main {
+        padding: 30px 16px;
+      }
+
+      .welcome h1 {
+        font-size: 26px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .task-form {
+        flex-direction: column;
+      }
+
+      .task-form button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">MyDashboard.</div>
+    <div class="clock" id="clock">Memuat waktu...</div>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h1>Halo, Elyza Sayanggggg! 👋</h1>
+      <p>
+        Kelola aktivitas harianmu dengan lebih mudah.<br>
+        Tetapkan target, selesaikan tugas, dan terus berkembang.
+      </p>
+    </section>
+
+    <section class="stats">
+      <div class="card">
+        <p>Total Tugas</p>
+        <h2 id="total">0</h2>
+      </div>
+
+      <div class="card">
+        <p>Tugas Selesai</p>
+        <h2 id="completed">0</h2>
+      </div>
+
+      <div class="card">
+        <p>Belum Selesai</p>
+        <h2 id="pending">0</h2>
+      </div>
+    </section>
+
+    <section class="task-section">
+      <h2>📋 Daftar Aktivitas</h2>
+
+      <form class="task-form" id="taskForm">
+        <input
+          type="text"
+          id="taskInput"
+          placeholder="Contoh: Belajar HTML dan CSS..."
+          maxlength="120"
+          required
+        >
+        <button type="submit">+ Tambah Tugas</button>
+      </form>
+
+      <ul id="taskList"></ul>
+      <p id="emptyMessage" class="empty">
+        Belum ada tugas. Yuk, tambahkan aktivitas pertamamu!
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Mini Dashboard &copy; <span id="year"></span>
+    | Dibuat dengan HTML, CSS, dan JavaScript
+  </footer>
+
+  <script>
+    const taskForm = document.getElementById("taskForm");
+    const taskInput = document.getElementById("taskInput");
+    const taskList = document.getElementById("taskList");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    let tasks = [];
+
+    function updateClock() {
+      const now = new Date();
+
+      document.getElementById("clock").textContent =
+        now.toLocaleDateString("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }) + " | " +
+        now.toLocaleTimeString("id-ID");
+    }
+
+    function updateStats() {
+      const completed = tasks.filter(task => task.done).length;
+
+      document.getElementById("total").textContent = tasks.length;
+      document.getElementById("completed").textContent = completed;
+      document.getElementById("pending").textContent =
+        tasks.length - completed;
+
+      emptyMessage.style.display =
+        tasks.length === 0 ? "block" : "none";
+    }
+
+    function renderTasks() {
+      taskList.replaceChildren();
+
+      tasks.forEach(task => {
+        const li = document.createElement("li");
+
+        if (task.done) {
+          li.classList.add("done");
+        }
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "check";
+        checkbox.checked = task.done;
+        checkbox.setAttribute("aria-label", "Tandai tugas selesai");
+
+        checkbox.addEventListener("change", () => {
+          task.done = checkbox.checked;
+          renderTasks();
+        });
+
+        const span = document.createElement("span");
+        span.textContent = task.text;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "delete";
+        deleteButton.textContent = "Hapus";
+
+        deleteButton.addEventListener("click", () => {
+          tasks = tasks.filter(item => item.id !== task.id);
+          renderTasks();
+        });
+
+        li.append(checkbox, span, deleteButton);
+        taskList.appendChild(li);
+      });
+
+      updateStats();
+    }
+
+    taskForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const text = taskInput.value.trim();
+
+      if (!text) return;
+
+      tasks.push({
+        id: Date.now() + Math.random(),
+        text: text,
+        done: false
+      });
+
+      taskInput.value = "";
+      renderTasks();
+      taskInput.focus();
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    updateClock();
+    setInterval(updateClock, 1000);
+    renderTasks();
+  </script>
+</body>
+</html>
